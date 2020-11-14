@@ -1,5 +1,5 @@
-# amazon-s3
-Read and write objects to amazon S3 using fetch()
+# scaleway-s3
+Read and write objects to scaleway S3 using fetch()
 
 ## Install
 ```
