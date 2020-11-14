@@ -1,6 +1,6 @@
 {
-  "name": "scaleway",
-  "version": "0.0.6",
+  "name": "scaleway-s3",
+  "version": "0.0.3",
   "description": "Read and write to AWS S3 using fetch()",
   "main": "index.js",
   "scripts": {
@@ -8,13 +8,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bitquant/amazon-s3.git"
+    "url": "git+https://github.com/devorel/scaleway-s3.git"
   },
   "keywords": [
     "scaleway",
     "s3",
-    "aws",
-    "fetch"
+    "aws"
   ],
   "author": "devorel",
   "license": "MIT",
