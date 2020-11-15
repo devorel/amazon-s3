@@ -25,6 +25,8 @@ var s3 = new S3({
         let key = '/a/test/file.txt';
         let body = 'test file contents';
         let days = 250;
+        let expiration_time_limit = 86400;
+
 
         let putResponse = await s3.putObject({bucket, key, body})
         console.log(`put status: ${putResponse.status}`)
