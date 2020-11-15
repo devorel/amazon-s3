@@ -19,9 +19,8 @@ S3.prototype.signAndSendRequest = function (method, bucket, path, body) {
     const amzdate = new Date().toISOString().replace(/[:-]|\.\d{3}/g, '')
     const datestamp = amzdate.slice(0, 8)
 
-    const service = 's3';
     const host = (this.domain !== 'digitaloceanspaces.com')
-            ? `${bucket}.${service}.${this.region}.${this.domain}`
+            ? `${bucket}.${this.service}.${this.region}.${this.domain}`
             : `${bucket}.${this.region}.${this.domain}`
 
     const endpoint = `https://${host}${path}`;
@@ -38,10 +37,10 @@ S3.prototype.signAndSendRequest = function (method, bucket, path, body) {
 
     const canonicalRequest = method + '\n' + canonicalUri + '\n' + canonicalQuerystring + '\n' + canonicalHeaders + '\n\n' + signedHeaders + '\n' + payloadHash;
 
-    const credentialScope = datestamp + '/' + this.region + '/' + service + '/' + 'aws4_request';
+    const credentialScope = datestamp + '/' + this.region + '/' + this.service + '/' + 'aws4_request';
     const stringToSign = algorithm + '\n' + amzdate + '\n' + credentialScope + '\n' + sha256(canonicalRequest);
 
-    const signingKey = getSignatureKey(this.secretKey, datestamp, this.region, service);
+    const signingKey = getSignatureKey(this.secretKey, datestamp, this.region, this.service);
     const signature = hmacSha256(stringToSign, signingKey);
 
     const authorizationHeader = algorithm + ' ' + 'Credential=' + this.accessKey + '/' + credentialScope + ',' + 'SignedHeaders=' + signedHeaders + ',' + 'Signature=' + signature;
@@ -60,10 +59,6 @@ S3.prototype.signAndSendRequest = function (method, bucket, path, body) {
     if (body) {// !== '' && body !== null && body !== undefined
         params.body = body;
     }
-
-    console.log(endpoint);
-    console.log(params);
-
     return fetch(endpoint, params);
 }
 
@@ -76,6 +71,47 @@ S3.prototype.signAndSendRequest = function (method, bucket, path, body) {
 //
 var defaultDomain = 'amazonaws.com'
 
+S3.prototype.getPublicUrl = function (params) {
+    bucket = params.bucket;
+    key = params.key;
+    expiration_time_limit = params.expiration_time_limit || '86400';
+
+    const amzdate = new Date().toISOString().replace(/[:-]|\.\d{3}/g, '');
+    const datestamp = amzdate.slice(0, 8);
+
+    $canonical_request = "GET" + "\n" +
+            `${key}` + "\n" +
+            "X-Amz-Algorithm=" + "AWS4-HMAC-SHA256" + "&" +
+            "X-Amz-Credential=" + `${this.accessKey}%2F${datestamp}%2F${this.region}%2F${this.service}%2Faws4_request` + "&" +
+            "X-Amz-Date=" + `${amzdate}` + "&" +
+            "X-Amz-Expires=" + `${expiration_time_limit}` + "&" +
+            "X-Amz-SignedHeaders=" + "host" + "\n" +
+            `host:${bucket}.${this.service}.${this.region}.${this.domain}` + "\n" +
+            "\n" +
+            "host" + "\n" +
+            "UNSIGNED-PAYLOAD";
+
+
+    $hashed_canonical_request = sha256($canonical_request);
+    stringToSign = "AWS4-HMAC-SHA256" + "\n" +
+            `${amzdate}` + "\n" +
+            `${datestamp}/${this.region}/${this.service}/aws4_request` + "\n" +
+            `${$hashed_canonical_request}`;
+
+    const signingKey = getSignatureKey(this.secretKey, datestamp, this.region, this.service);
+    const signature = hmacSha256(stringToSign, signingKey);
+
+    $signed_get_url = `https://${bucket}.${this.service}.${this.region}.${this.domain}` +
+            `${key}` + "?" +
+            "X-Amz-Algorithm=" + "AWS4-HMAC-SHA256" + "&" +
+            "X-Amz-Credential=" + `${this.accessKey}%2F${datestamp}%2F${this.region}%2F${this.service}%2Faws4_request` + "&" +
+            "X-Amz-Date=" + amzdate + "&" +
+            "X-Amz-Expires=" + expiration_time_limit + "&" +
+            "X-Amz-SignedHeaders=" + "host" + "&" +
+            "X-Amz-Signature=" + signature;
+
+    return $signed_get_url;
+}
 
 function S3(config) {
     this.accessKey = config.accessKey;
@@ -83,6 +119,7 @@ function S3(config) {
     this.region = config.region;
     this.domain = (config.domain !== undefined) ? config.domain : defaultDomain;
     this.headers = {};
+    this.service = 's3';
 
 
 }
