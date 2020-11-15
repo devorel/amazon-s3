@@ -48,7 +48,6 @@ var s3 = new S3({
 
 
         let delResponse = await s3.deleteObject({bucket, key});
-
         console.log(`del status: ${delResponse.status}`)
         console.log(`del response body: '${await delResponse.text()}'`)
     }
