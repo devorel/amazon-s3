@@ -27,12 +27,13 @@ var s3 = new S3({
         let days = 250;
 
         let putResponse = await s3.putObject({bucket, key, body})
-
         console.log(`put status: ${putResponse.status}`)
         console.log(`put response body: '${await putResponse.text()}'`)
 
+        let PublicUrl = s3.getPublicUrl({bucket, key})
+        console.log(`Public Url: ${PublicUrl}`)
+        
         let getResponse = await s3.getObject({bucket, key});
-
         console.log(`get status: ${getResponse.status}`)
         console.log(`get response body: '${await getResponse.text()}'`)
 
