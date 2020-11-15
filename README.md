@@ -32,7 +32,7 @@ var s3 = new S3({
         console.log(`put status: ${putResponse.status}`)
         console.log(`put response body: '${await putResponse.text()}'`)
 
-        let PublicUrl = s3.getPublicUrl({bucket, key})
+        let PublicUrl = s3.getPublicUrl({bucket, key, expiration_time_limit})
         console.log(`Public Url: ${PublicUrl}`)
         
         let getResponse = await s3.getObject({bucket, key});
