@@ -23,15 +23,13 @@ var s3 = new S3({
 
         let bucket = 'testbucket';
         let key = '/a/test/file.txt';
+
         let body = 'test file contents';
-        let days = 250;
-        let expiration_time_limit = 86400;
-
-
         let putResponse = await s3.putObject({bucket, key, body})
         console.log(`put status: ${putResponse.status}`)
         console.log(`put response body: '${await putResponse.text()}'`)
 
+        let expiration_time_limit = 86400;
         let PublicUrl = s3.getPublicUrl({bucket, key, expiration_time_limit})
         console.log(`Public Url: ${PublicUrl}`)
         
@@ -43,6 +41,7 @@ var s3 = new S3({
         console.log(`put status: ${putResponse2.status}`)
         console.log(`put response body: '${await putResponse2.text()}'`)
 
+        let days = 250;
         let getResponse1 = await s3.restoreObject({bucket, key, days});
         console.log(`get status: ${getResponse1.status}`)
         console.log(`get response body: '${await getResponse1.text()}'`)
