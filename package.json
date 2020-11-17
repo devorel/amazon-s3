@@ -1,27 +1,27 @@
 {
-  "name": "scaleway-s3",
-  "version": "0.0.4",
-  "description": "Read and write to AWS S3 using fetch()",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/devorel/scaleway-s3.git"
-  },
-  "keywords": [
-    "scaleway",
-    "s3",
-    "aws"
-  ],
-  "author": "devorel",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/devorel/scaleway-s3/issues"
-  },
-  "homepage": "https://github.com/devorel/scaleway-s3#readme",
-  "dependencies": {
-    "crypto-js": "3.1.9-1"
-  }
+    "name": "scaleway-s3",
+    "version": "0.0.6",
+    "description": "Read and write to AWS S3 using fetch()",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/devorel/scaleway-s3.git"
+    },
+    "keywords": [
+        "scaleway",
+        "s3",
+        "aws"
+    ],
+    "author": "devorel",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/devorel/scaleway-s3/issues"
+    },
+    "homepage": "https://github.com/devorel/scaleway-s3#readme",
+    "dependencies": {
+        "crypto-js": "3.1.9-1"
+    }
 }
