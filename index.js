@@ -19,14 +19,25 @@ S3.prototype.signAndSendRequest = function (method, bucket, path, body) {
     const amzdate = new Date().toISOString().replace(/[:-]|\.\d{3}/g, '')
     const datestamp = amzdate.slice(0, 8)
 
-    const host = (this.domain !== 'digitaloceanspaces.com')
+    let host = (this.domain !== 'digitaloceanspaces.com')
             ? `${bucket}.${this.service}.${this.region}.${this.domain}`
             : `${bucket}.${this.region}.${this.domain}`
+    if (!bucket) {
+        host = host.substring(1);
+    }
+    const url = new URL(`https://${host}${path}`);
+    let paramsurl = [];
+    url.searchParams.forEach((v, k) => {
+        paramsurl.push(k + '=' + encodeURIComponent(v));
+    });
+    const canonicalUri = encodeURI(path.split('?')[0]);
+    const canonicalQuerystring = paramsurl.join('&') || '';
 
-    const endpoint = `https://${host}${path}`;
+    let endpoint = `https://${host}${canonicalUri}`;
+    if (canonicalQuerystring) {
+        endpoint += '?' + paramsurl.join('&');
+    }
 
-    const canonicalUri = path;
-    const canonicalQuerystring = '';
     const payloadHash = 'UNSIGNED-PAYLOAD';// sha256(body).toString();
 
     const Headers = [`host:${host}`, `x-amz-content-sha256:${payloadHash}`, `x-amz-date:${amzdate}`];
@@ -62,25 +73,32 @@ S3.prototype.signAndSendRequest = function (method, bucket, path, body) {
     return fetch(endpoint, params);
 }
 
-//
 // Any S3 compatible service provider can be used. The default is AWS.
 //
 //   AWS             amazonaws.com
 //   Digital Ocean   digitaloceanspaces.com
 //   Scaleway        scw.cloud
-//
-var defaultDomain = 'amazonaws.com'
 
 S3.prototype.getPublicUrl = function (params) {
     bucket = params.bucket;
-    key = params.key;
+    path = params.key;
     expiration_time_limit = params.expiration_time_limit || '86400';
 
     const amzdate = new Date().toISOString().replace(/[:-]|\.\d{3}/g, '');
     const datestamp = amzdate.slice(0, 8);
 
+    let host = (this.domain !== 'digitaloceanspaces.com')
+            ? `${bucket}.${this.service}.${this.region}.${this.domain}`
+            : `${bucket}.${this.region}.${this.domain}`
+    if (!bucket) {
+        host = host.substring(1);
+    }
+    const canonicalUri = encodeURI(path.split('?')[0]);
+
+    const endpoint = `https://${host}${canonicalUri}`;//path
+
     $canonical_request = "GET" + "\n" +
-            `${key}` + "\n" +
+            `${canonicalUri}` + "\n" +
             "X-Amz-Algorithm=" + "AWS4-HMAC-SHA256" + "&" +
             "X-Amz-Credential=" + `${this.accessKey}%2F${datestamp}%2F${this.region}%2F${this.service}%2Faws4_request` + "&" +
             "X-Amz-Date=" + `${amzdate}` + "&" +
@@ -101,8 +119,7 @@ S3.prototype.getPublicUrl = function (params) {
     const signingKey = getSignatureKey(this.secretKey, datestamp, this.region, this.service);
     const signature = hmacSha256(stringToSign, signingKey);
 
-    $signed_get_url = `https://${bucket}.${this.service}.${this.region}.${this.domain}` +
-            `${key}` + "?" +
+    $signed_get_url = `${endpoint}` + "?" +
             "X-Amz-Algorithm=" + "AWS4-HMAC-SHA256" + "&" +
             "X-Amz-Credential=" + `${this.accessKey}%2F${datestamp}%2F${this.region}%2F${this.service}%2Faws4_request` + "&" +
             "X-Amz-Date=" + amzdate + "&" +
@@ -117,11 +134,9 @@ function S3(config) {
     this.accessKey = config.accessKey;
     this.secretKey = config.secretKey;
     this.region = config.region;
-    this.domain = (config.domain !== undefined) ? config.domain : defaultDomain;
+    this.domain = config.domain;
     this.headers = {};
     this.service = 's3';
-
-
 }
 
 S3.prototype.glacierObject = function (params) {
@@ -136,13 +151,24 @@ S3.prototype.restoreObject = function (params) {
 S3.prototype.getObject = function (params) {
     return this.signAndSendRequest('GET', params.bucket, params.key);
 }
-
+S3.prototype.getList = function (params) {
+    return this.signAndSendRequest('GET', params.bucket, params.path);
+}
 S3.prototype.putObject = function (params) {
+//    this.headers = {...this.headers, ...{'x-amz-acl': 'public-read', 'x-amz-storage-class': 'GLACIER'}};
     return this.signAndSendRequest('PUT', params.bucket, params.key, params.body);
 }
 
 S3.prototype.deleteObject = function (params) {
     return this.signAndSendRequest('DELETE', params.bucket, params.key);
 }
-
+S3.prototype.infoObject = function (params) {
+    return this.signAndSendRequest('HEAD', params.bucket, params.key);
+}
+S3.prototype.createFolder = function (params) {
+    return this.signAndSendRequest('PUT', params.bucket, params.key);
+}
+S3.prototype.createBucket = function (params) {//fr-par nl-ams pl-waw
+    return this.signAndSendRequest('PUT', params.bucket, '/', `<CreateBucketConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><LocationConstraint>${params.region || 'fr-par'}</LocationConstraint></CreateBucketConfiguration>`);
+}
 module.exports = S3;
