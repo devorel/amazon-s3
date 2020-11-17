@@ -1,6 +1,6 @@
 {
     "name": "scaleway-s3",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "description": "Read and write to AWS S3 using fetch()",
     "main": "index.js",
     "scripts": {
