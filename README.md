@@ -34,8 +34,8 @@ var s3 = new S3({
         console.log(`get status: ${list.status}`)
         console.log(`get response body: '${await list.text()}'`)
 
-        let path = '/a/test/?acl';
-        let aclResponse = await s3.getObject({bucket, path});
+        let key = '/a/test/?acl';
+        let aclResponse = await s3.getObject({bucket, key});
         console.log(`get status: ${aclResponse.status}`)
         console.log(`get response body: '${await aclResponse.text()}'`)
 
