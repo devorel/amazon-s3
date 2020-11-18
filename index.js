@@ -25,6 +25,12 @@ S3.prototype.signAndSendRequest = function (method, bucket, path, body) {
     if (!bucket) {
         host = host.substring(1);
     }
+    if (path[0] != '/') {
+        path = '/' + path;//path must start with /
+    }
+    if (path == '/') {
+        path = '';
+    }
     const url = new URL(`https://${host}${path}`);
     let paramsurl = [];
     url.searchParams.forEach((v, k) => {
@@ -93,6 +99,12 @@ S3.prototype.getPublicUrl = function (params) {
     if (!bucket) {
         host = host.substring(1);
     }
+    if (path[0] != '/') {
+        path = '/' + path;
+    }
+    if (path == '/') {
+        path = '';
+    }
     const canonicalUri = encodeURI(path.split('?')[0]);
 
     const endpoint = `https://${host}${canonicalUri}`;//path
@@ -145,7 +157,7 @@ S3.prototype.glacierObject = function (params) {
 }
 
 S3.prototype.restoreObject = function (params) {
-    return this.signAndSendRequest('PUT', params.bucket, params.key, `<RestoreRequest xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Days>${params.days || 250}</Days></RestoreRequest>`);
+    return this.signAndSendRequest('POST', params.bucket, params.key+'?restore', `<RestoreRequest xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Days>${params.days || 250}</Days></RestoreRequest>`);
 }
 
 S3.prototype.getObject = function (params) {
