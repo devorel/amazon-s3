@@ -157,7 +157,7 @@ S3.prototype.glacierObject = function (params) {
 }
 
 S3.prototype.restoreObject = function (params) {
-    return this.signAndSendRequest('POST', params.bucket, params.key+'?restore', `<RestoreRequest xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Days>${params.days || 250}</Days></RestoreRequest>`);
+    return this.signAndSendRequest('POST', params.bucket, params.key + '?restore', `<RestoreRequest xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Days>${params.days || 250}</Days></RestoreRequest>`);
 }
 
 S3.prototype.getObject = function (params) {
@@ -167,7 +167,7 @@ S3.prototype.getList = function (params) {
     return this.signAndSendRequest('GET', params.bucket, params.path);
 }
 S3.prototype.putObject = function (params) {
-//    this.headers = {...this.headers, ...{'x-amz-acl': 'public-read', 'x-amz-storage-class': 'GLACIER'}};
+    this.headers = {...this.headers, ...{'x-amz-acl': 'public-read'}};//, 'x-amz-storage-class': 'GLACIER'
     return this.signAndSendRequest('PUT', params.bucket, params.key, params.body);
 }
 
