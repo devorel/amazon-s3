@@ -147,9 +147,9 @@ function S3(config) {
     this.secretKey = config.secretKey;
     this.region = config.region;
     this.domain = config.domain;
-    this.headers = {};
+    this.headers = config.headers || {};
     this.service = 's3';
-    this.fetch = config.fetch;
+    this.fetch = config.fetch; 
 }
 
 S3.prototype.glacierObject = function (params) {
