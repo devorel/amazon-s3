@@ -149,7 +149,7 @@ function S3(config) {
     this.domain = config.domain;
     this.headers = {};
     this.service = 's3';
-    this.fetch = config.fetch || fetch;
+    this.fetch = config.fetch;
 }
 
 S3.prototype.glacierObject = function (params) {
