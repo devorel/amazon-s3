@@ -76,7 +76,7 @@ S3.prototype.signAndSendRequest = function (method, bucket, path, body) {
     if (body) {// !== '' && body !== null && body !== undefined
         params.body = body;
     }
-    return fetch(endpoint, params);
+    return this.fetch(endpoint, params);
 }
 
 // Any S3 compatible service provider can be used. The default is AWS.
@@ -149,6 +149,7 @@ function S3(config) {
     this.domain = config.domain;
     this.headers = {};
     this.service = 's3';
+    this.fetch = config.fetch || fetch;
 }
 
 S3.prototype.glacierObject = function (params) {
