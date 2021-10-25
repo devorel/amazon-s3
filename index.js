@@ -1,11 +1,27 @@
 var sha256 = require('crypto-js/sha256');
 var hmacSha256 = require('crypto-js/hmac-sha256');
+var fetch= require('node-fetch');
 
 /*
  Documentation:
  https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-header-based-auth.html
  */
+function encodeRfc3986(urlEncodedString) {
+    return urlEncodedString.replace(/[!'()*]/g, function (c) {
+        return '%' + c.charCodeAt(0).toString(16).toUpperCase();
+    });
+}
 
+function encodeRfc3986Full(str) {
+    return encodeRfc3986(encodeURIComponent(str));
+}
+
+function encodePath(path) {
+    path = decodeURIComponent(path.replace(/\+/g, ' '));
+    path = encodeRfc3986Full(path);
+    path = path.replace(/%2F/g, '/');
+    return path;
+}
 function getSignatureKey(key, dateStamp, regionName, serviceName) {
     var keyDate = hmacSha256(dateStamp, "AWS4" + key);
     var keyRegion = hmacSha256(regionName, keyDate);
@@ -31,6 +47,9 @@ S3.prototype.signAndSendRequest = function (method, bucket, path, body) {
     if (path == '/') {
         path = '';
     }
+    
+//    const encodedPath = encodePath(path);//to test
+
     const url = new URL(`https://${host}${path}`);
     let paramsurl = [];
     url.searchParams.forEach((v, k) => {
@@ -76,7 +95,7 @@ S3.prototype.signAndSendRequest = function (method, bucket, path, body) {
     if (body) {// !== '' && body !== null && body !== undefined
         params.body = body;
     }
-    return this.fetch(endpoint, params);
+    return fetch(endpoint, params);
 }
 
 // Any S3 compatible service provider can be used. The default is AWS.
@@ -148,8 +167,7 @@ function S3(config) {
     this.region = config.region;
     this.domain = config.domain;
     this.headers = config.headers || {};
-    this.service = 's3';
-    this.fetch = config.fetch; 
+    this.service = 's3'; 
 }
 
 S3.prototype.glacierObject = function (params) {
