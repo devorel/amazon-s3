@@ -9,7 +9,6 @@ $ npm install scaleway-s3
 ## Usage
 ```javascript
 var S3 = require('scaleway-s3')
-global.fetch = require('node-fetch')
 
 var s3 = new S3({
     accessKey: '<private accessKey>',
@@ -69,8 +68,8 @@ var s3 = new S3({
 
         let region='fr-par';//fr-par nl-ams pl-waw
         let bucketResponse = await s3.createBucket({bucket, region});
-        console.log(`del status: ${bucketResponse.status}`)
-        console.log(`del response body: '${await bucketResponse.text()}'`)
+        console.log(`get status: ${bucketResponse.status}`)
+        console.log(`get response body: '${await bucketResponse.text()}'`)
 
     }
     catch (ex) {
