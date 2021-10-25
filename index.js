@@ -1,8 +1,9 @@
 //var sha256 = require('crypto-js/sha256');
 //var hmacSha256 = require('crypto-js/hmac-sha256');
 //var fetch= require('node-fetch');
-import sha256 from "crypto-js/sha256";
-import hmacSha256 from "crypto-js/hmac-sha256";
+
+import sha256 from "./sha256.js"; //import sha256 from 'crypto-js/sha256'; //bug with import module
+import hmacSha256 from "./hmac-sha256.js"; //import hmacSHA256 from 'crypto-js/hmac-sha256';//bug with import module
 import fetch from "node-fetch";
 
 /*
@@ -206,4 +207,4 @@ S3.prototype.createFolder = function (params) {
 S3.prototype.createBucket = function (params) {//fr-par nl-ams pl-waw
     return this.signAndSendRequest('PUT', params.bucket, '/', `<CreateBucketConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><LocationConstraint>${params.region || 'fr-par'}</LocationConstraint></CreateBucketConfiguration>`);
 }
-module.exports = S3;
+export default S3;//module.exports = S3;
