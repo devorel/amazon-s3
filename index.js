@@ -1,8 +1,10 @@
 var sha256 = require('crypto-js/sha256');
 var hmacSha256 = require('crypto-js/hmac-sha256');
-var fetch= require('node-fetch');
+//var fetch= require('node-fetch');
+import fetch from "node-fetch";
 
 /*
+ * 
  Documentation:
  https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-header-based-auth.html
  */
