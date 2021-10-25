@@ -1,6 +1,8 @@
-var sha256 = require('crypto-js/sha256');
-var hmacSha256 = require('crypto-js/hmac-sha256');
+//var sha256 = require('crypto-js/sha256');
+//var hmacSha256 = require('crypto-js/hmac-sha256');
 //var fetch= require('node-fetch');
+import sha256 from "crypto-js/sha256";
+import hmacSha256 from "crypto-js/hmac-sha256";
 import fetch from "node-fetch";
 
 /*

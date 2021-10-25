@@ -8,9 +8,9 @@ $ npm install scaleway-s3
 
 ## Usage
 ```javascript
-var S3 = require('scaleway-s3')
+import scalewayS3 from "scaleway-s3";
 
-var s3 = new S3({
+var s3 = new scalewayS3({
     accessKey: '<private accessKey>',
     secretKey: '<private secretKey>',
     region: 'fr-par',
