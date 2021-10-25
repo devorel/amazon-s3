@@ -1,6 +1,6 @@
 {
     "name": "scaleway-s3",
-    "version": "0.0.17",
+    "version": "0.0.18",
     "description": "Read and write to AWS S3 using fetch()",
     "main": "index.js",
     "type": "module",
@@ -22,7 +22,9 @@
         "url": "https://github.com/devorel/scaleway-s3/issues"
     },
     "homepage": "https://github.com/devorel/scaleway-s3#readme",
-    "bug-dependencies":{"crypto-js": "^4.1.1"},
+    "bug-dependencies": {
+        "crypto-js": "^4.1.1"
+    },
     "dependencies": {
         "node-fetch": "^3.0.0"
     }

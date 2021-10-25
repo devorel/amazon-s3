@@ -24,7 +24,7 @@ var s3 = new scalewayS3({
         let key = '/a/test/file.txt';
 
         let body = 'test file contents';
-        let putResponse = await s3.putObject({bucket, key, body})
+        let putResponse = await s3.putObject(bucket, key, body)
         console.log(`put status: ${putResponse.status}`)
         console.log(`put response body: '${await putResponse.text()}'`)
 
@@ -34,12 +34,12 @@ var s3 = new scalewayS3({
         console.log(`get response body: '${await list.text()}'`)
 
         let key = '/a/test/?acl';
-        let aclResponse = await s3.getObject({bucket, key});
+        let aclResponse = await s3.getObject(bucket, key);
         console.log(`get status: ${aclResponse.status}`)
         console.log(`get response body: '${await aclResponse.text()}'`)
 
         let key = '/a/test2/';
-        let getResponseFolder = await s3.createFolder({bucket, key});
+        let getResponseFolder = await s3.createFolder(bucket, key);
         console.log(`get status: ${getResponseFolder.status}`)
         console.log(`get response body: '${await getResponseFolder.text()}'`)
 
@@ -48,28 +48,28 @@ var s3 = new scalewayS3({
         let PublicUrl = s3.getPublicUrl({bucket, key, expiration_time_limit})
         console.log(`Public Url: ${PublicUrl}`)
         
-        let getResponse = await s3.getObject({bucket, key});
+        let getResponse = await s3.getObject(bucket, key);
         console.log(`get status: ${getResponse.status}`)
         console.log(`get response body: '${await getResponse.text()}'`)
 
-        let putResponse2 = await s3.glacierObject({bucket, key})
+        let putResponse2 = await s3.glacierObject(bucket, key)
         console.log(`put status: ${putResponse2.status}`)
         console.log(`put response body: '${await putResponse2.text()}'`)
 
         let days = 250;
-        let getResponse1 = await s3.restoreObject({bucket, key, days});
+        let getResponse1 = await s3.restoreObject(bucket, key, days);
         console.log(`get status: ${getResponse1.status}`)
         console.log(`get response body: '${await getResponse1.text()}'`)
 
 
-        let delResponse = await s3.deleteObject({bucket, key});
+        let delResponse = await s3.deleteObject(bucket, key);
         console.log(`del status: ${delResponse.status}`)
         console.log(`del response body: '${await delResponse.text()}'`)
 
         let region='fr-par';//fr-par nl-ams pl-waw
-        let bucketResponse = await s3.createBucket({bucket, region});
-        console.log(`get status: ${bucketResponse.status}`)
-        console.log(`get response body: '${await bucketResponse.text()}'`)
+        let bucketResponse = await s3.createBucket(bucket, region);
+        console.log(`create status: ${bucketResponse.status}`)
+        console.log(`create response body: '${await bucketResponse.text()}'`)
 
     }
     catch (ex) {
