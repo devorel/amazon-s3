@@ -1,7 +1,7 @@
 # scaleway-s3
 Read and write objects to scaleway S3 using fetch()
 getPublicUrl | glacierObject | restoreObject | getObject | createFolder | createBucket
-## Install
+## Install 
 ```
 $ npm install scaleway-s3
 ```
