@@ -27,6 +27,6 @@
     },
     "dependencies": {
         "node-fetch": "^3.0.0",
-        "cryptojs2": "^1.0.1",
+        "cryptojs2": "^1.0.1"
     }
 }
