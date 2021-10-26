@@ -1,5 +1,9 @@
-import sha256 from "./sha256.js"; //import sha256 from 'crypto-js/sha256'; //bug with import module
-import hmacSha256 from "./hmac-sha256.js"; //import hmacSHA256 from 'crypto-js/hmac-sha256';//bug with import module
+//import sha256 from "./sha256.js"; //for browser
+//import hmacSha256 from "./hmac-sha256.js";  //for browser
+
+//import sha256 from 'crypto-js/sha256'; //bug with import module
+//import hmacSHA256 from 'crypto-js/hmac-sha256';//bug with import module
+import {SHA256 as sha256,HmacSHA256 as hmacSha256} from "cryptojs2";   
 import fetch from "node-fetch";
 
 /*
@@ -20,8 +24,8 @@ class S3 {
 
     signAndSendRequest(method, bucket, path, body) {
 
-        const amzdate = new Date().toISOString().replace(/[:-]|\.\d{3}/g, '')
-        const datestamp = amzdate.slice(0, 8)
+        const amzdate = new Date().toISOString().replace(/[:-]|\.\d{3}/g, '');
+        const datestamp = amzdate.slice(0, 8);
 
         let host = (this.domain !== 'digitaloceanspaces.com')
                 ? `${bucket}.${this.service}.${this.region}.${this.domain}`

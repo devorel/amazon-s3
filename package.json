@@ -1,6 +1,6 @@
 {
     "name": "scaleway-s3",
-    "version": "0.0.18",
+    "version": "0.0.20",
     "description": "Read and write to AWS S3 using fetch()",
     "main": "index.js",
     "type": "module",
@@ -26,6 +26,7 @@
         "crypto-js": "^4.1.1"
     },
     "dependencies": {
-        "node-fetch": "^3.0.0"
+        "node-fetch": "^3.0.0",
+        "cryptojs2": "^1.0.1",
     }
 }
